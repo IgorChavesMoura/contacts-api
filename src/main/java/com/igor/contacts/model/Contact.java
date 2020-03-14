@@ -63,4 +63,12 @@ public class Contact {
     public void setWhatsapp(String whatsapp) {
         this.whatsapp = whatsapp;
     }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 }
