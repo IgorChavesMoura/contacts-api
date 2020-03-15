@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/person")
+@RestController
+@RequestMapping("/person")
 public class PersonController {
 
     @Autowired
@@ -20,7 +21,7 @@ public class PersonController {
     @Autowired
     private ContactService contactService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<Person>> findPersons(@RequestParam(value = "q", required = false) Optional<String> query){
 
         List<Person> persons = personService.searchPersons(query);
@@ -46,12 +47,12 @@ public class PersonController {
     }
 
     @GetMapping("/{id}/contacts")
-    public ResponseEntity<List<Contact>> findPersonContacts(@PathVariable("id") Long id){
+    public ResponseEntity<List<Contact>> findPersonContacts(@PathVariable("id") Long id, @RequestParam(value = "q", required = false) Optional<String> query){
 
         Optional<Person> person = personService.findById(id);
 
-        //Se foi encontrada uma pessoa com o id, retorna ok com o resultado. Senão retorna not found - Igor
-        return person.map(value -> ResponseEntity.ok(value.getContacts())).orElseGet(() -> ResponseEntity.notFound().build());
+        //Se foi encontrada uma pessoa com o id, retorna ok com os resultados filtrando pela query caso exista. Senão retorna not found - Igor
+        return person.map(value -> query.map(q -> ResponseEntity.ok(contactService.findByPersonAndInfo(value,q))).orElseGet(() -> ResponseEntity.ok(value.getContacts()))).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
@@ -65,17 +66,32 @@ public class PersonController {
 
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Person> savePerson(@RequestBody Person person){
 
         return ResponseEntity.ok(personService.save(person));
 
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<Person> updatePerson(@RequestBody Person person){
 
         return ResponseEntity.ok(personService.save(person));
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Person> updatePerson(@PathVariable("id") Long id, @RequestBody Person person){
+
+        if(personService.personExists(id)){
+
+            person.setId(id);
+
+            return ResponseEntity.ok(personService.save(person));
+
+        }
+
+        return ResponseEntity.notFound().build();
 
     }
 

@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController("/contact")
+@RestController
+@RequestMapping("/contact")
 public class ContactController {
 
     @Autowired
@@ -25,9 +26,9 @@ public class ContactController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Contact> updateContact(@RequestBody Contact contact){
+    public ResponseEntity<Contact> updateContact(@PathVariable("id") Long id, @RequestBody Contact contact){
 
-        Optional<Contact> dbContact = contactService.findById(contact.getId());
+        Optional<Contact> dbContact = contactService.findById(id);
 
         return dbContact.map(value -> ResponseEntity.ok(contactService.save(contact,value.getPerson()))).orElseGet(() -> ResponseEntity.notFound().build());
 

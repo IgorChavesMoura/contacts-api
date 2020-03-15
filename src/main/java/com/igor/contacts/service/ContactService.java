@@ -44,35 +44,41 @@ public class ContactService {
 
         if(contact.getId() != null){
 
-            Optional<Contact> dbContact = findById(contact.getId());
 
-            if(dbContact.isPresent()){
+            if(contactExists(contact.getId())){
 
-                if(contact.getName() != null && !contact.getName().isEmpty()){
+                Optional<Contact> dbContact = findById(contact.getId());
 
-                    dbContact.get().setName(contact.getName());
+                if(dbContact.isPresent()){
+
+                    if(contact.getName() != null && !contact.getName().isEmpty()){
+
+                        dbContact.get().setName(contact.getName());
+
+                    }
+
+                    if(contact.getEmail() != null && !contact.getEmail().isEmpty()){
+
+                        dbContact.get().setEmail(contact.getEmail());
+
+                    }
+
+                    if(contact.getPhone() != null && !contact.getPhone().isEmpty()){
+
+                        dbContact.get().setPhone(contact.getPhone());
+
+                    }
+
+                    if(contact.getWhatsapp() != null && !contact.getWhatsapp().isEmpty()){
+
+                        dbContact.get().setWhatsapp(contact.getWhatsapp());
+
+                    }
+
+                    return contactRepository.save(dbContact.get());
 
                 }
 
-                if(contact.getEmail() != null && !contact.getEmail().isEmpty()){
-
-                    dbContact.get().setEmail(contact.getEmail());
-
-                }
-
-                if(contact.getPhone() != null && !contact.getPhone().isEmpty()){
-
-                    dbContact.get().setPhone(contact.getPhone());
-
-                }
-
-                if(contact.getWhatsapp() != null && !contact.getWhatsapp().isEmpty()){
-
-                    dbContact.get().setWhatsapp(contact.getWhatsapp());
-
-                }
-
-                return contactRepository.save(dbContact.get());
 
             }
 

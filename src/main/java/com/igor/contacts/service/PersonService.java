@@ -1,5 +1,6 @@
 package com.igor.contacts.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.igor.contacts.model.Person;
 import com.igor.contacts.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PersonService {
 
     @Autowired
@@ -24,10 +26,16 @@ public class PersonService {
 
     }
 
+    public Boolean personExists(Long id){
+
+        return personRepository.existsById(id);
+
+    }
+
     public List<Person> searchPersons(Optional<String> query){
 
         //Checa se foi passado o parametro de filtragem para busca, se sim busca pelo nome, e retorna todos os registros caso contrário - Igor
-        return query.isPresent() ? personRepository.findAllByNameContaining(query.get()) : personRepository.findAll();
+        return query.isPresent() ? personRepository.findAllByNameContainingIgnoreCase(query.get()) : personRepository.findAll();
 
     }
 
@@ -35,18 +43,29 @@ public class PersonService {
 
         if(person.getId() != null){
 
-            Optional<Person> dbPerson = findById(person.getId());
+            if(personExists(person.getId())){
 
-            if(dbPerson.isPresent()){
 
-                if(person.getName() != null && !person.getName().isEmpty()){
-                    dbPerson.get().setName(person.getName());
+                Optional<Person> dbPerson = findById(person.getId());
+
+                if(dbPerson.isPresent()){
+
+                    if(person.getName() != null && !person.getName().isEmpty()){
+                        dbPerson.get().setName(person.getName());
+                    }
+
+                    if(person.getContacts() != null){
+
+                        //Se algum dos contatos tiver uma informação para atualizar, executa a atualização - Igor
+                        person.getContacts().forEach(c -> contactService.save(c,dbPerson.get()));
+
+                    }
+
+                    return personRepository.save(dbPerson.get());
+
                 }
 
-                //Se algum dos contatos tiver uma informação para atualizar, executa a atualizaçãp
-                person.getContacts().forEach(c -> contactService.save(c,c.getPerson()));
 
-                return personRepository.save(dbPerson.get());
 
             }
 

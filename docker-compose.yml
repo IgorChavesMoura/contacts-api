@@ -1,0 +1,33 @@
+version: '3'
+services:
+  docker-mysql:
+    container_name: docker-mysql
+    image: mysql/mysql-server:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=contacts
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12345
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - 3307:3306
+    restart: always
+    networks:
+      - contactsnet
+
+
+  api:
+    build: .
+    ports:
+      - 8081:8080
+    networks:
+      - contactsnet
+    links:
+      - docker-mysql:db
+    depends_on:
+      - docker-mysql
+
+
+networks:
+  contactsnet:
+    driver: bridge
