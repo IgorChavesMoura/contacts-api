@@ -16,11 +16,12 @@
 	Parameters:
 	- q -> Filter persons that name contains the given value (optional)
 - GET /person/{id} -> Get person with given id
-- GET /person/{id} -> Get all contacts from the person with given id
+- GET /person/{id}/contacts -> Get all contacts from the person with given id
 	Parameters:
 	- q -> Filter contacts that name,phone,email or whatsapp contains the given value (optional)
 - GET /contact/{id} -> Get contact with given id
 - POST /person -> Create new person record or update if the body has a VALID id
+- POST /person/{id}/contacts -> Add a new contact to a person with the given id or update if the body has a VALID id
 - PUT /person -> Update person record with given id field value
 - PUT /person/{id} -> Update person with given id
 - PUT /contact/{id} -> Update contact with given id
