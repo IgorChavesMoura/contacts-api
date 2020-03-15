@@ -1,0 +1,9 @@
+com/igor/contacts/controller/PersonController.class
+com/igor/contacts/model/Person.class
+com/igor/contacts/repository/PersonRepository.class
+com/igor/contacts/service/ContactService.class
+com/igor/contacts/service/PersonService.class
+com/igor/contacts/ContactsApplication.class
+com/igor/contacts/controller/ContactController.class
+com/igor/contacts/model/Contact.class
+com/igor/contacts/repository/ContactRepository.class
