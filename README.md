@@ -45,7 +45,7 @@
 - Remove contact from person
 ##### You can check and add more tests editing the test class file: src/test/java/com/igor/contacts/ContactsApplicationTests.java
 
-### If you wanna build the jar file and run the tests above automatically you run
+### If you wanna build the jar file and run the tests above automatically you can run:
 > mvn clean install package
 #### This command will use maven the build the spring boot app, run the tests and pack it with the dependencies in jar file
 #### If you wanna to build the jar file, build and run the container cluster you can run:
